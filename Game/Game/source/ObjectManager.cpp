@@ -1,5 +1,6 @@
 #include "ObjectManager.h"
 #include "Player.h"
+#include "Sphere.h"
 
 ObjectManager* ObjectManager::ObjInstance = new ObjectManager();
 ObjectManager::ObjectManager() {
@@ -7,6 +8,7 @@ ObjectManager::ObjectManager() {
 	ObjInstance = this;
 
 	AddObject(new Player());
+	AddObject(new Sphere());
 }
 
 ObjectManager::~ObjectManager() {
