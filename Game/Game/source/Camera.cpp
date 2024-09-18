@@ -27,7 +27,7 @@ Camera::~Camera() {
 
 bool Camera::Initialize() {
 
-	_vTarget = VGet(0, 5, 0);
+	_vTarget = VGet(0, 10, 0);
 	_vPos = VGet(0, 0, 0);
 
 	return true;

@@ -3,6 +3,7 @@
 #include "ApplicationMain.h"
 #include "ModeGame.h"
 
+
 ModeGame::ModeGame() {
 
 	// 変数の初期化
@@ -13,6 +14,7 @@ ModeGame::ModeGame() {
 	mouseWorldEndPos = VGet(0.0f, 0.0f, 0.0f);
 	oldMousePos = VGet(0.0f, 0.0f, 0.0f);
 	Cam = nullptr;
+	mObj = nullptr;
 }
 
 bool ModeGame::Initialize() {
@@ -21,11 +23,13 @@ bool ModeGame::Initialize() {
 	// 背景用ハンドルを読み込む
 	backHandle = LoadGraph("res/skysphere1.bmp");
 
-	
-
 	// カメラを定義
 	Cam = new Camera();
 	Cam->Initialize();
+
+	// オブジェクト定義
+	mObj = new ObjectManager();
+	mObj->Initialize();
 
 	return true;
 }
@@ -38,7 +42,10 @@ bool ModeGame::Terminate() {
 
 	// クラスの開放
 	delete Cam;
-	Cam = nullptr;	
+	Cam = nullptr;
+
+	delete mObj;
+	mObj = nullptr;
 
 	return true;
 }
@@ -51,6 +58,9 @@ bool ModeGame::Process() {
 
 	// カメラの更新
 	Cam->Process();
+
+	// オブジェクトの更新
+	mObj->Update();
 
 	return true;
 }
@@ -66,8 +76,11 @@ bool ModeGame::Render() {
 	SetWriteZBuffer3D(TRUE);
 	SetUseBackCulling(TRUE);
 
-	// カメラの設定ヴューワーからコピペ
+	// カメラの描画
 	Cam->Render();
+
+	// オブジェクトの描画
+	mObj->Draw();
 
 	return true;
 }

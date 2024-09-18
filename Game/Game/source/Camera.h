@@ -3,7 +3,7 @@
 #include "ApplicationMain.h"
 
 //デフォルトのプレイヤーとカメラの距離
-const auto DEFAULT_DIST = 50.0f;
+const auto DEFAULT_DIST = 75.0f;
 
 //　スタートのプレイヤーとカメラの距離
 const auto START_DIST = 25.0f;
