@@ -15,6 +15,7 @@ ModeGame::ModeGame() {
 	oldMousePos = VGet(0.0f, 0.0f, 0.0f);
 	Cam = nullptr;
 	mObj = nullptr;
+	ui = nullptr;
 }
 
 bool ModeGame::Initialize() {
@@ -26,6 +27,10 @@ bool ModeGame::Initialize() {
 	// カメラを定義
 	Cam = new Camera();
 	Cam->Initialize();
+
+	// UIを定義
+	ui = new UI();
+	ui->Initialize();
 
 	// オブジェクト定義
 	mObj = new ObjectManager();
@@ -44,6 +49,9 @@ bool ModeGame::Terminate() {
 	delete Cam;
 	Cam = nullptr;
 
+	delete ui;
+	ui = nullptr;
+
 	delete mObj;
 	mObj = nullptr;
 
@@ -58,6 +66,9 @@ bool ModeGame::Process() {
 
 	// カメラの更新
 	Cam->Process();
+
+	// UIの更新
+	ui->Process();
 
 	// オブジェクトの更新
 	mObj->Update();
@@ -79,8 +90,11 @@ bool ModeGame::Render() {
 	// カメラの描画
 	Cam->Render();
 
+	// UIの描画
+	ui->Draw();
+
 	// オブジェクトの描画
-	mObj->Draw();
+	//mObj->Draw();
 
 	return true;
 }

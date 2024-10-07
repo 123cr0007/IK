@@ -3,6 +3,7 @@
 #include "appframe.h"
 #include "Camera.h"
 #include "ObjectManager.h"
+#include "UI.h"
 #include <string>
 
 // モード
@@ -37,6 +38,9 @@ protected:
 
 	// カメラ
 	Camera* Cam;
+
+	// UI
+	UI* ui;
 
 	// オブジェクト
 	ObjectManager* mObj;

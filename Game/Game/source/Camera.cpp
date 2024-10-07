@@ -62,8 +62,8 @@ bool Camera::Process() {
 		if (rx > analogMin) { radY -= 0.05f; }
 		if (rx < -analogMin) { radY += 0.05f; }
 
-		if(key & KEY_INPUT_LEFT) { radY -= 0.05f; }
-		if(key & KEY_INPUT_RIGHT) { radY += 0.05f; }
+		/*if(key & KEY_INPUT_LEFT) { radY -= 0.05f; }
+		if(key & KEY_INPUT_RIGHT) { radY += 0.05f; }*/
 
 		//YŽ²‚ð‰ñ‚·
 		_vPos.x = _vTarget.x + cos(radY) * lengthY;

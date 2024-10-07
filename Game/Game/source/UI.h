@@ -12,7 +12,7 @@ public:
 	static UI* GetUIInstance() { return (UI*)UIInstance; }
 
 	UI();
-	~UI();
+	virtual ~UI();
 	
 	void Initialize();
 	void Terminate();
@@ -30,5 +30,11 @@ private:
 	int hamdle_slidBer;
 	int handle_slidBer2;
 
+	int model_Joint_0;
+	int model_Joint_1;
+	int model_Arm_0;
+	int model_Arm_1;
+
 	float sx, sy;
+	float moveX;
 };
