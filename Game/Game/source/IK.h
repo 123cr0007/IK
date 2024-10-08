@@ -10,5 +10,5 @@ public:
 
 	// “ñ‚Â‚Ìƒ{[ƒ“‚ÌIK
 	void TwoBoneIK(VECTOR startPos, float arm1Length, float arm2Length, VECTOR targetPos,
-		VECTOR& arm1Lot, VECTOR& arm1Lot2);
+		float& arm1Lot, float& arm1Lot2);
 };

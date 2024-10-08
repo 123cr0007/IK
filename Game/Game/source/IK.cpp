@@ -2,7 +2,7 @@
 
 
 void IK::TwoBoneIK(VECTOR startPos, float arm1Length, float arm2Length, VECTOR targetPos,
-    VECTOR& arm1Lot, VECTOR& arm1Lot2) {
+    float& arm1Lot, float& arm1Lot2) {
 
     // memo
     /*{
@@ -23,38 +23,40 @@ void IK::TwoBoneIK(VECTOR startPos, float arm1Length, float arm2Length, VECTOR t
         q2 = π - α
     }*/
 
-	float length = VSize(VSub(targetPos, startPos));
+    // ターゲットとの距離
+    float length = VSize(VSub(targetPos, startPos));
+
+    // 腕がターゲットに届かない場合
     if (length > (arm1Length + arm2Length)) {
-		arm1Lot = VNorm(VSub(targetPos, startPos));
-		arm1Lot2 = VNorm(VSub(targetPos, startPos));
+        // 腕をターゲット方向に一直線に伸ばす
+        arm1Lot = atan2f(targetPos.y - startPos.y, targetPos.x - startPos.x);
+        arm1Lot2 = 0.0f; // 腕2はまっすぐに伸びる
         return;
     }
-
 
     // ボーンの長さの2乗
     float sqL1 = arm1Length * arm1Length;
     float sqL2 = arm2Length * arm2Length;
 
-    // ターゲット位置
-    float x = targetPos.x;
-    float y = targetPos.y;
-    float z = targetPos.z;  // zは今回は使わない
-
     // ターゲット位置の平方
+    float x = targetPos.x - startPos.x;
+    float y = targetPos.y - startPos.y;
     float aqX = x * x;
     float aqY = y * y;
 
     // 余弦定理を使って角度を計算
-    float a = acosf((sqL1 + sqL2 - aqX - aqY)
-        / (2.f * arm1Length * arm2Length));
-    float b = acosf((aqX + aqY + sqL1 - sqL2)
-        / (2.f * arm1Length * sqrtf(aqX + aqY)));
+    float a = acosf(Clamp(-1.0f, 1.0f ,
+        (sqL1 + sqL2 - aqX + aqY)
+        / (2.f * arm1Length * arm2Length)));
+    float b = acosf(Clamp(-1.0f, 1.0f, 
+        (aqX + aqY + sqL1 - sqL2)
+        / (2.f * arm1Length * length)));
 
-    // 山折りでの関節角度を計算
-    float q1 = atan2f(y, x) - b;
-    float q2 = PI - a;
+    // 関節角度の計算
+    float q1 = atan2f(y, x) - b;    // 腕1の角度
+    float q2 = PI - a;              // 腕2の角度
 
     // 結果をセット
-    arm1Lot = VGet(0, 0, q1);
-    arm1Lot2 = VGet(0, 0, q2);
+    arm1Lot = q1;
+    arm1Lot2 = q2;
 }
