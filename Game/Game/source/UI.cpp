@@ -17,39 +17,41 @@ UI::UI() {
 
 	sx = 2;
 	sy = 2;
-	moveX = 8;
+
+	ik = new IK();
 }
 
 UI::~UI() {
 
-	DeleteGraph(handle_slider);
-	DeleteGraph(handle_slider2);
-	DeleteGraph(hamdle_slidBer);
-	DeleteGraph(handle_slidBer2);
+	MV1DeleteModel(handle_slider);
+	MV1DeleteModel(handle_slider2);
+	MV1DeleteModel(hamdle_slidBer);
+	MV1DeleteModel(handle_slidBer2);
+	MV1DeleteModel(model_Arm_0);
+	MV1DeleteModel(model_Arm_1);
+	MV1DeleteModel(model_Joint_0);
+	MV1DeleteModel(model_Joint_1);
+	MV1DeleteModel(model_Arms);
 }
 
 void UI::Initialize() {
 
 	model_Joint_0 = MV1LoadModel("res/UI/Joint.mv1");
 	model_Arm_0 = MV1LoadModel("res/UI/Arm.mv1");
+	model_Arms = MV1LoadModel("res/Lynette/Lynette.mv1");
 
 	model_Arm_0 = MV1DuplicateModel(model_Arm_0);
 	model_Joint_0 = MV1DuplicateModel(model_Joint_0);
 	model_Arm_1 = MV1DuplicateModel(model_Arm_0);
 	model_Joint_1 = MV1DuplicateModel(model_Joint_0);
-}
 
-void UI::Terminate() {
-
-	MV1DeleteModel(model_Joint_0);
-	MV1DeleteModel(model_Arm_0);
-
+	int arm1BoneIndex = MV1SearchFrame(model_Arms, "左腕");
+	VECTOR pos = MV1GetFramePosition(model_Arms, arm1BoneIndex);
+	sx = pos.x + 2;
+	sy = pos.y + 2;
 }
 
 void UI::Process() {
-
-	sx = Clamp(SLIDER_MIN, SLIDER_MAX, sx);
-	sy = Clamp(SLIDER_MIN, SLIDER_MAX, sy);
 
 	// 左右ボタンでsxを変更
 	if (CheckHitKey(KEY_INPUT_LEFT)) {
@@ -75,43 +77,69 @@ void UI::Process() {
 		}
 	}
 
-	// 角度を計算 (sx, syに基づいてアームの方向を決定)
-	float dir = atan2(sy, sx);  // atan2を使用して方向を計算
-	VECTOR VDir = VGet(0, 0, dir);
-	MV1SetRotationXYZ(model_Arm_0, VDir);
+	sx = Clamp(SLIDER_MIN, SLIDER_MAX, sx);
+	sy = Clamp(SLIDER_MIN, SLIDER_MAX, sy);
 
-	// 行列計算 (スケール → 回転 → 移動の順で行列を掛け合わせる)
-	MATRIX mat = MGetIdent();
-	MATRIX sMat = MGetScale(VGet(0.01f, 0.01f, 0.01f));  // スケール行列
-	MATRIX rMat = MGetRotZ(dir);                         // 回転行列
-	MATRIX tMat = MGetTranslate(VGet(moveX, 0, 0));          // 移動行列
+	// モデルのボーンのインデックスをえる
+	int arm1BoneIndex = MV1SearchFrame(model_Arms, "左腕");
+	int arm2BoneIndex = MV1SearchFrame(model_Arms, "左ひじ");
+	int endArmBoneIndex = MV1SearchFrame(model_Arms, "左手首");
 
-	// 順序に従って行列を掛け合わせる
-	mat = MMult(mat, sMat);  // スケールをまず適用
-	mat = MMult(mat, tMat);  // 最後に移動
-	mat = MMult(mat, rMat);  // 次に回転
+	// ローカル座標を取得
+	MATRIX arm1LocalMat = MV1GetFrameLocalMatrix(model_Arms, arm1BoneIndex);
+	MATRIX arm2LocalMat = MV1GetFrameLocalMatrix(model_Arms, arm2BoneIndex);
+	MATRIX endArmLocalMat = MV1GetFrameLocalMatrix(model_Arms, endArmBoneIndex);
+
+	// ワールド座標を取得
+	VECTOR arm1WorldPos = MV1GetFramePosition(model_Arms, arm1BoneIndex);
+	VECTOR arm2WorldPos = MV1GetFramePosition(model_Arms, arm2BoneIndex);
+	VECTOR endArmWorldPos = MV1GetFramePosition(model_Arms, endArmBoneIndex);
+
+	// ローカルでのX軸の拡大値を腕の長さとする
+	float arm1Length = VSize(VSub(arm2WorldPos, arm1WorldPos));
+	float arm2Length = VSize(VSub(endArmWorldPos, arm2WorldPos));
+
+	// 角度保存するよう
+	float arm1Lot = 0.0f;
+	float arm2Lot = 0.0f;
+
+	ik->TwoBoneIK(arm1WorldPos, arm1Length, arm2Length,
+		VGet(sx, sy, 0), arm1Lot, arm2Lot);
+
+	// 行列計算 (スケール → 移動 → 回転の順で行列を掛け合わせる)
+	MATRIX arm1Mat = MGetIdent();
+	MATRIX arm2Mat = MGetIdent();
+	// 回転行列
+	MATRIX arm1RMat = MGetRotZ(arm1Lot);
+	MATRIX arm2RMat = MGetRotZ(arm2Lot);
+
+	arm1Mat = MMult(arm1Mat, arm1RMat);
+	arm2Mat = MMult(arm2Mat, arm2RMat);
 
 	// モデルに行列を適用
-	MV1SetMatrix(model_Arm_1, mat);
-	MV1SetMatrix(model_Joint_1, mat);
+	MV1SetFrameUserLocalMatrix(model_Arms, arm1BoneIndex, arm1Mat);
+	MV1SetFrameUserLocalMatrix(model_Arms, arm2BoneIndex, arm2Mat);
+
+	armLength = arm1Length;
 }
 
 void UI::Draw() {
 
-	VECTOR scale = VGet(0.01f, 0.01f, 0.01f);
-	MV1SetScale(model_Arm_0, scale);
-	MV1SetScale(model_Joint_0, scale);
+	//DrawSphere3D(VGet(sx, sy, 0), 1, 32, GetColor(255, 255, 255), GetColor(255, 255, 255), TRUE);
 
-	DrawSphere3D(VGet(sx, sy, 0), 1, 32, GetColor(255, 255, 255), GetColor(255, 255, 255), TRUE);
-
+#if 0
 	MV1DrawModel(model_Joint_0);
 	MV1DrawModel(model_Arm_0);
 	MV1DrawModel(model_Joint_1);
 	MV1DrawModel(model_Arm_1);
+#else
+	MV1DrawModel(model_Arms);
+#endif
+
 
 	DrawFormatString(0, 500, GetColor(0, 0, 0), "sx:%f", sx);
 	DrawFormatString(0, 520, GetColor(0, 0, 0), "sy:%f", sy);
-	DrawFormatString(0, 540, GetColor(0, 0, 0), "mx:%f", moveX);
+	DrawFormatString(0, 540, GetColor(0, 0, 0), "armLength:%f", armLength);
 
 
 	VECTOR pos1 = MV1GetPosition(model_Arm_0);

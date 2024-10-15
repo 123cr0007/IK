@@ -30,7 +30,7 @@ void IK::TwoBoneIK(VECTOR startPos, float arm1Length, float arm2Length, VECTOR t
     if (length > (arm1Length + arm2Length)) {
         // ˜r‚ğƒ^[ƒQƒbƒg•ûŒü‚Éˆê’¼ü‚ÉL‚Î‚·
         arm1Lot = atan2f(targetPos.y - startPos.y, targetPos.x - startPos.x);
-        arm1Lot2 = 0.0f; // ˜r2‚Í‚Ü‚Á‚·‚®‚ÉL‚Ñ‚é
+        arm1Lot2 = arm1Lot; // ˜r2‚Í‚Ü‚Á‚·‚®‚ÉL‚Ñ‚é
         return;
     }
 
@@ -41,16 +41,16 @@ void IK::TwoBoneIK(VECTOR startPos, float arm1Length, float arm2Length, VECTOR t
     // ƒ^[ƒQƒbƒgˆÊ’u‚Ì•½•û
     float x = targetPos.x - startPos.x;
     float y = targetPos.y - startPos.y;
-    float aqX = x * x;
-    float aqY = y * y;
+    float sqX = x * x;
+    float sqY = y * y;
 
     // —]Œ·’è—‚ğg‚Á‚ÄŠp“x‚ğŒvZ
     float a = acosf(Clamp(-1.0f, 1.0f ,
-        (sqL1 + sqL2 - aqX + aqY)
+        (sqL1 + sqL2 - sqX - sqY)
         / (2.f * arm1Length * arm2Length)));
     float b = acosf(Clamp(-1.0f, 1.0f, 
-        (aqX + aqY + sqL1 - sqL2)
-        / (2.f * arm1Length * length)));
+        (sqL1 + sqX + sqY - sqL2)
+        / (2.f * arm1Length * sqrt(sqX + sqY))));
 
     // ŠÖßŠp“x‚ÌŒvZ
     float q1 = atan2f(y, x) - b;    // ˜r1‚ÌŠp“x

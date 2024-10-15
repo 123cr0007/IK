@@ -1,9 +1,12 @@
 #pragma once
 #include "DxLib.h"
 #include "appframe.h"
+#include "IK.h"
 
 constexpr auto SLIDER_MAX = 100;
 constexpr auto SLIDER_MIN = 0.1f;
+
+constexpr auto ARM_SCALE = 0.01f;
 
 class UI {
 public:
@@ -15,7 +18,6 @@ public:
 	virtual ~UI();
 	
 	void Initialize();
-	void Terminate();
 	void Process();
 	void Draw();
 
@@ -35,6 +37,10 @@ private:
 	int model_Arm_0;
 	int model_Arm_1;
 
+	int model_Arms;
+
 	float sx, sy;
-	float moveX;
+	float armLength;
+
+	IK* ik;
 };

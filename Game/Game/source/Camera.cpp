@@ -84,7 +84,7 @@ bool Camera::Process() {
 		}
 
 		//L1ボタンでカメラの距離を変える
-		if (pad.key & PAD_INPUT_5) {
+		if (pad.key & PAD_INPUT_5 || key & PAD_INPUT_5) {
 
 			if (CamDist > 20) {
 				CamDist -= 1.f;
@@ -92,7 +92,7 @@ bool Camera::Process() {
 		}
 
 		//R1ボタンでカメラの距離を変える
-		if (pad.key & PAD_INPUT_6) {
+		if (pad.key & PAD_INPUT_6 || key & PAD_INPUT_8) {
 
 			if (CamDist < DEFAULT_DIST) {
 				CamDist += 1.f;
