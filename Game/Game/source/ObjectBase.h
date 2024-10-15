@@ -16,6 +16,7 @@ public:
 
     // これを自機と敵のクラス側で override して、それぞれクラス専用の関数書き換えたりする
     virtual bool Initialize();
+	virtual bool Terminate();
     virtual bool Process();
     // type=0の時2Dを描画,type=1の時3Dを描画,tupe = 2の時ビルボード描画
     virtual bool Render(int type);

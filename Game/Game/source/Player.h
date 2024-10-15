@@ -15,7 +15,7 @@ public:
 	~Player();
 
 	bool Initialize()override;
-	bool Terminate();
+	bool Terminate() override;
 	bool Process()override;
 	bool Render(int type) override;
 

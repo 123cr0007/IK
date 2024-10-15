@@ -14,6 +14,10 @@ bool Player::Initialize() {
 
 	Load("res/Lynette/Lynette.mv1", 1);
 	alpha = 0.5f;
+
+	// 透明度
+	MV1SetOpacityRate(handle, alpha);	// 透明度を設定
+
 	return true;
 }
 
@@ -28,10 +32,7 @@ bool Player::Process() {
 }
 
 bool Player::Render(int type) {
+	ObjectBase::Render(type);
 
-	// 透明度
-	MV1SetOpacityRate(handle, alpha);	// 透明度を設定
-
-	MV1DrawModel(handle);
 	return true;
 }

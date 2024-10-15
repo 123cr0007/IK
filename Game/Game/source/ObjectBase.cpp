@@ -83,8 +83,12 @@ int ObjectBase::Load(const TCHAR* fileName, int type) {
 
 bool ObjectBase::Initialize() {
 
-    capsuleTop = VGet(vPos.x, vPos.y + ChHight, vPos.z);
     return true;
+}
+
+bool ObjectBase::Terminate() {
+
+	return true;
 }
 
 

@@ -1,4 +1,5 @@
 #include "UI.h"
+#include "Player.h"
 
 UI* UI::UIInstance = nullptr;
 
@@ -27,8 +28,7 @@ UI::~UI() {
 
 void UI::Initialize() {
 
-	model_Arms = MV1LoadModel("res/Lynette/Lynette.mv1");
-
+	model_Arms = MV1DuplicateModel(Player::GetPlInstance()->GetHandle());
 	int arm1BoneIndex = MV1SearchFrame(model_Arms, "ç∂òr");
 	VECTOR pos = MV1GetFramePosition(model_Arms, arm1BoneIndex);
 	sx = pos.x + 2;

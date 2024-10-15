@@ -28,13 +28,14 @@ bool ModeGame::Initialize() {
 	Cam = new Camera();
 	Cam->Initialize();
 
+	// オブジェクト定義
+	mObj = new ObjectManager();
+	mObj->Initialize();
+
 	// UIを定義
 	ui = new UI();
 	ui->Initialize();
 
-	// オブジェクト定義
-	mObj = new ObjectManager();
-	mObj->Initialize();
 
 	return true;
 }
@@ -49,11 +50,11 @@ bool ModeGame::Terminate() {
 	delete Cam;
 	Cam = nullptr;
 
-	delete ui;
-	ui = nullptr;
-
 	delete mObj;
 	mObj = nullptr;
+
+	delete ui;
+	ui = nullptr;
 
 	return true;
 }
@@ -67,11 +68,11 @@ bool ModeGame::Process() {
 	// カメラの更新
 	Cam->Process();
 
-	// UIの更新
-	ui->Process();
-
 	// オブジェクトの更新
 	mObj->Update();
+
+	// UIの更新
+	ui->Process();
 
 	return true;
 }
@@ -90,11 +91,11 @@ bool ModeGame::Render() {
 	// カメラの描画
 	Cam->Render();
 
-	// UIの描画
-	ui->Draw();
-
 	// オブジェクトの描画
 	mObj->Draw();
+
+	// UIの描画
+	ui->Draw();
 
 	return true;
 }
