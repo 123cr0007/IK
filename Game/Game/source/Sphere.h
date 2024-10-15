@@ -2,6 +2,7 @@
 
 #include "appframe.h"
 #include "ObjectBase.h"
+#include "IK.h"
 #include <string>
 
 
@@ -74,4 +75,6 @@ protected:
 
     float checkLengh;
     float checkLengh2;
+
+	IK* ik;
 };

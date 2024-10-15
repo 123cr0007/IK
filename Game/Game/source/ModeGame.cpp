@@ -94,7 +94,7 @@ bool ModeGame::Render() {
 	ui->Draw();
 
 	// オブジェクトの描画
-	//mObj->Draw();
+	mObj->Draw();
 
 	return true;
 }

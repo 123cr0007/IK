@@ -3,7 +3,7 @@
 #include "appframe.h"
 #include "IK.h"
 
-constexpr auto SLIDER_MAX = 100;
+constexpr auto SLIDER_MAX = 20;
 constexpr auto SLIDER_MIN = 0.1f;
 
 constexpr auto ARM_SCALE = 0.01f;

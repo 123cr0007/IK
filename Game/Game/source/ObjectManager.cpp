@@ -21,7 +21,7 @@ void ObjectManager::AddObject(ObjectBase* object) {
 
 bool ObjectManager::Initialize() {
 
-	for (auto object : m_objects) {
+	for (auto&& object : m_objects) {
 		object->Initialize();
 	}
 
@@ -30,7 +30,7 @@ bool ObjectManager::Initialize() {
 
 bool ObjectManager::Update() {
 
-	for (auto object : m_objects) {
+	for (auto&& object : m_objects) {
 		object->Process();
 	}
 
@@ -39,7 +39,7 @@ bool ObjectManager::Update() {
 
 bool ObjectManager::Draw() {
 
-	for (auto object : m_objects) {
+	for (auto&& object : m_objects) {
 		object->Render(1);
 	}
 
@@ -48,7 +48,7 @@ bool ObjectManager::Draw() {
 
 void ObjectManager::RemoveObject(ObjectBase* obj) {
 
-	for (auto it = m_objects.begin(); it != m_objects.end(); ++it) {
+	for (auto&& it = m_objects.begin(); it != m_objects.end(); ++it) {
 		if (*it == obj) {
 
 			m_objects.erase(it);

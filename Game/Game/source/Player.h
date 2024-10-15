@@ -22,6 +22,9 @@ public:
 	// ゲッター
 	int GetHandle() { return handle; }
 
+	// セッター
+	void SetHandle(int h) { handle = h; }
+
 	
 
 protected:
